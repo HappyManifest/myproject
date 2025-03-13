@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}个人信息{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-5">个人信息</h1>
+
+    <div class="card shadow-lg mb-4">
+        <div class="card-header bg-dark text-white rounded-top">
+            <h4 class="mb-0">用户详细信息</h4>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-sm-3"><strong>用户名:</strong></div>
+                <div class="col-sm-9">{{ user.Username }}</div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-sm-3"><strong>手机号:</strong></div>
+                <div class="col-sm-9">{{ user.Phone }}</div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-sm-3"><strong>邮箱:</strong></div>
+                <div class="col-sm-9">{{ user.Email }}</div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-sm-3"><strong>创建时间:</strong></div>
+                <div class="col-sm-9">{{ user.created_time|date:"Y-m-d H:i" }}</div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-sm-3"><strong>更新时间:</strong></div>
+                <div class="col-sm-9">{{ user.update_time|date:"Y-m-d H:i" }}</div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-sm-3"><strong>头像:</strong></div>
+                <div class="col-sm-9">
+                    {% if user.Head %}
+                        <img src="{{ user.Head.url }}" alt="头像" class="rounded-circle shadow" style="width: 150px; height: 150px;">
+                    {% else %}
+                        <p class="text-muted">暂无头像</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-lg mb-4">
+        <div class="card-header bg-dark text-white rounded-top">
+            <h4 class="mb-0">发布的志愿者活动</h4>
+        </div>
+        <div class="card-body">
+            {% if published_activities %}
+                <ul class="list-group">
+                    {% for activity in published_activities %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 py-3">
+                            <a href="{% url 'volunteers:activity_detail' activity.id %}" class="text-decoration-none text-dark font-weight-bold">
+                                <h5 class="mb-0">{{ activity.title }}</h5>
+                            </a>
+                            <span class="text-muted">开始时间：{{ activity.start_time|date:"Y-m-d H:i" }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">您还没有发布过任何志愿者活动。</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card shadow-lg mb-4">
+        <div class="card-header bg-dark text-white rounded-top">
+            <h4 class="mb-0">参加的志愿者活动</h4>
+        </div>
+        <div class="card-body">
+            {% if participated_activities %}
+                <ul class="list-group">
+                    {% for activity in participated_activities %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 py-3">
+                            <a href="{% url 'volunteers:activity_detail' activity.id %}" class="text-decoration-none text-dark font-weight-bold">
+                                <h5 class="mb-0">{{ activity.title }}</h5>
+                            </a>
+                            <span class="text-muted">开始时间：{{ activity.start_time|date:"Y-m-d H:i" }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">您还没有参加过任何志愿者活动。</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card shadow-lg mb-4">
+        <div class="card-header bg-dark text-white rounded-top">
+            <h4 class="mb-0">发布的论坛帖子</h4>
+        </div>
+        <div class="card-body">
+            {% if posts %}
+                <ul class="list-group list-group-flush">
+                    {% for post in posts %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 py-3">
+                            <a href="{% url 'forum:post_detail' post.id %}" class="text-decoration-none text-dark font-weight-bold">
+                                <h5 class="mb-0">{{ post.title }}</h5>
+                            </a>
+                            <div class="d-flex align-items-center">
+                                <span class="text-muted mr-4">发布时间: {{ post.created_at|date:"Y-m-d H:i" }}</span>
+
+                                <form method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="delete_post_id" value="{{ post.id }}">
+                                    <button type="submit" class="btn btn-danger btn-sm rounded-pill ml-3">
+                                        <i class="fas fa-trash-alt"></i> 删除
+                                    </button>
+                                </form>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">您还没有发布过任何论坛帖子。</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="text-center">
+        <a href="/user_center/edit_profile" class="btn btn-primary btn-lg mr-3">编辑个人信息</a>
+        <form method="post" action="/user_center/logout" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-lg">退出登录</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+<!-- article_crawl_result.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>爬取结果</title>
+</head>
+<body>
+    <h1>爬取到的文章</h1>
+    <ul>
+        {% for article in articles %}
+            <li>
+                <h2>{{ article.title }}</h2>
+                <p>{{ article.short_description }}</p>
+                <p>{{ article.content }}</p>
+                <a href="{{ article.link }}" target="_blank">阅读完整文章</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'crawl_articles' %}">返回</a>
+</body>
+</html>

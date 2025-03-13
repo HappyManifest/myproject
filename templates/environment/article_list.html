@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}科普文章{% endblock %}
+
+{% block content %}
+  <div class="container my-5">
+    <h1 class="display-4 text-center text-primary mb-5">科普文章</h1>
+
+
+    <div class="row justify-content-center mb-4">
+      <div class="col-md-6">
+        <form method="get" action="{% url 'search' %}">
+          <div class="input-group">
+            <input type="text" name="query" class="form-control" value="{{ request.GET.query }}" placeholder="搜索文章..." required>
+            <button type="submit" class="btn btn-outline-primary">搜索</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+    <div class="row">
+      {% for article in page_obj %}
+        <div class="col-md-4 d-flex align-items-stretch mb-4">
+          <div class="card shadow-sm border-light rounded d-flex flex-column">
+            {% if article.image %}
+              <img src="{{ article.image.url }}" class="card-img-top img-fluid" alt="{{ article.title }}">
+            {% endif %}
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">
+                <a href="{% url 'article_detail' article.id %}" class="text-primary">{{ article.title }}</a>
+              </h5>
+              <p class="card-text text-muted flex-grow-1">{{ article.short_description }}</p>
+              <p class="card-text">
+                <small class="text-muted"><strong>发布时间:</strong> {{ article.created_at|date:"Y-m-d H:i" }}</small>
+              </p>
+              <div class="mt-auto">
+                <a href="{% url 'article_detail' article.id %}" class="btn btn-outline-primary btn-sm w-100">阅读更多</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+
+    {% if not page_obj %}
+      <div class="alert alert-warning text-center" role="alert">
+        没有找到相关的科普文章。
+      </div>
+    {% endif %}
+
+{% if page_obj.has_other_pages %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo; 第一页</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">上一页</a>
+            </li>
+        {% endif %}
+
+
+        <li class="page-item active">
+            <span class="page-link">第 {{ page_obj.number }} 页 / 共 {{ page_obj.paginator.num_pages }} 页</span>
+        </li>
+
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">下一页</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">最后一页 &raquo;</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+  </div>
+{% endblock %}

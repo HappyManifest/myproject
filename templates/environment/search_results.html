@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}搜索结果{% endblock %}
+
+{% block content %}
+  <div class="container my-5">
+
+    <h1 class="display-4 text-center text-primary mb-4">搜索结果</h1>
+
+    <p class="lead text-center mb-4">搜索关键词: <strong>"{{ query }}"</strong></p>
+
+    <div class="row">
+      {% if articles %}
+        {% for article in articles %}
+          <div class="col-md-4 mb-4">
+
+            <div class="card shadow-sm border-light rounded">
+              {% if article.image %}
+                <img src="{{ article.image.url }}" class="card-img-top" alt="{{ article.title }}">
+              {% endif %}
+              <div class="card-body">
+                <h5 class="card-title"><a href="{% url 'article_detail' article.id %}" class="text-primary">{{ article.title }}</a></h5>
+                <p class="card-text text-muted">{{ article.short_description }}</p>
+                <a href="{% url 'article_detail' article.id %}" class="btn btn-outline-primary btn-sm">阅读更多</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-12">
+          <div class="alert alert-warning text-center" role="alert">
+            没有找到与 "<strong>{{ query }}</strong>" 相关的文章。
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

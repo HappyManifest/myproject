@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}发布帖子{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg p-4" style="width: 600px;">
+        <div class="card-header bg-primary text-white text-center rounded-top">
+            <h3 class="mb-0">发布新帖子</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+
+                <div class="form-group">
+                    <label class="font-weight-bold">帖子标题</label>
+                    <input type="text" class="form-control" name="title" placeholder="请输入帖子标题" required>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="font-weight-bold">帖子内容</label>
+                    <textarea class="form-control" name="content" rows="6" placeholder="请输入帖子内容..." required></textarea>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="font-weight-bold">上传图片 (可选)</label>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="post_image" name="image">
+                        <label class="custom-file-label" for="post_image">选择图片...</label>
+                    </div>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary btn-block">发布帖子</button>
+            </form>
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.querySelector(".custom-file-input").addEventListener("change", function(e) {
+        let fileName = e.target.files[0].name;
+        let nextSibling = e.target.nextElementSibling;
+        nextSibling.innerText = fileName;
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ activity.title }} - 活动详情{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+
+        <h1 class="display-4 mb-4">{{ activity.title }}</h1>
+
+
+        <div class="card shadow-lg mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">活动简介</h5>
+                <p class="card-text">{{ activity.description }}</p>
+
+                <div class="row">
+                    <div class="col-md-6">
+                         <p><strong>发布人：</strong>
+        <a href="{% url 'user_center:personal_zone2' activity.organizer.Username %}" class="text-decoration-none text-primary">
+            {{ activity.organizer.Username }}
+        </a>
+    </p>
+                        <p><strong>时间：</strong>{{ activity.start_time }} - {{ activity.end_time }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>地点：</strong>{{ activity.location }}</p>
+                    </div>
+                </div>
+                <p><strong>需要志愿者：</strong>{{ activity.total_volunteers }}</p>
+                <p><strong>已报名志愿者：</strong>{{ activity.volunteers_registered }}</p>
+            </div>
+        </div>
+
+
+        {% if registered_users %}
+            <h3 class="mb-3">已报名的用户：</h3>
+            <div class="list-group mb-4">
+                {% for user in registered_users %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ user }}
+                        <span class="badge bg-primary rounded-pill">已报名</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-muted">目前没有用户报名参加该活动。</p>
+        {% endif %}
+
+
+        <div class="d-flex justify-content-between mt-4">
+            {% if can_register %}
+                <form method="POST" class="d-inline-block">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-check-circle"></i> 报名参加
+                    </button>
+                </form>
+            {% elif already_registered %}
+                <p class="text-success fs-4">您已报名该活动</p>
+            {% elif activity.is_full %}
+                <p class="text-danger fs-4">活动已满员，无法报名</p>
+            {% endif %}
+        </div>
+        {% if activity.organizer.Username == u %}
+        <a href="{% url 'volunteers:edit_activity' activity.id %}" class="btn btn-warning mt-3">修改活动</a>
+    {% endif %}
+    </div>
+{% endblock %}

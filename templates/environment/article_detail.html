@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+  <div class="container my-5">
+    <div class="article-detail my-4 p-4 border rounded shadow-lg bg-light">
+
+      <h1 class="display-4 text-center text-primary mb-4">{{ article.title }}</h1>
+
+      {% if article.image %}
+        <div class="text-center mb-4">
+          <img src="{{ article.image.url }}" class="img-fluid rounded shadow-sm" alt="{{ article.title }}">
+        </div>
+      {% endif %}
+
+      <div class="article-content mb-4">
+        <p class="lead text-muted" style="line-height: 1.6;">{{ article_content | safe }}</p>
+      </div>
+
+      <div class="text-center">
+        <a href="{% url 'article_list' %}" class="btn btn-primary btn-lg px-4 py-2 mt-4 rounded-pill shadow-sm">
+          <i class="bi bi-arrow-left-circle"></i> 返回文章列表
+        </a>
+      </div>
+
+    </div>
+  </div>
+{% endblock %}

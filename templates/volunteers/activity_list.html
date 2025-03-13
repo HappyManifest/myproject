@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}志愿者活动列表{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="display-4 mb-4">志愿者活动列表</h1>
+        <a href="{% url 'volunteers:create_activity' %}" class="btn btn-primary btn-lg mb-4">
+            <i class="bi bi-plus-circle"></i> 发布新活动
+        </a>
+
+
+        <form method="GET" class="mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="搜索活动" name="q" value="{{ request.GET.q }}">
+                        <button class="btn btn-outline-secondary" type="submit">
+                            <i class="bi bi-search"></i> 搜索
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <select class="form-select" name="sort" onchange="this.form.submit()">
+                            <option value="created_at" {% if request.GET.sort == 'created_at' %}selected{% endif %}>按创建时间排序</option>
+                            <option value="start_time" {% if request.GET.sort == 'start_time' %}selected{% endif %}>按活动开始时间排序</option>
+                            <option value="end_time" {% if request.GET.sort == 'end_time' %}selected{% endif %}>按活动结束时间排序</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+        <div class="list-group mb-4">
+            {% for activity in activities %}
+                <div class="list-group-item d-flex justify-content-between align-items-start mb-3 border rounded shadow-sm">
+                    <div>
+                        <h5 class="mb-2">
+                            <a href="{% url 'volunteers:activity_detail' activity.id %}" class="text-decoration-none text-dark">
+                                {{ activity.title }}
+                            </a>
+                        </h5>
+                        <p class="mb-1 text-muted">{{ activity.description|truncatechars:100 }}</p>
+                        <p class="text-muted">
+                            📅 时间：{{ activity.start_time|date:"Y-m-d H:i" }} - {{ activity.end_time|date:"Y-m-d H:i" }}<br>
+                            📍 地点：{{ activity.location }}<br>
+                            👤 发布人：{{ activity.organizer.Username }}
+                        </p>
+                    </div>
+                    <div class="ms-3">
+                        <a href="{% url 'volunteers:activity_detail' activity.id %}" class="btn btn-outline-primary btn-sm">查看详情</a>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-center text-muted">暂无志愿者活动</p>
+            {% endfor %}
+        </div>
+
+        {% if activities.has_other_pages %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if activities.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">&laquo; 第一页</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ activities.previous_page_number }}">上一页</a>
+                    </li>
+                {% endif %}
+                <li class="page-item active">
+                    <span class="page-link">第 {{ activities.number }} 页 / 共 {{ activities.paginator.num_pages }} 页</span>
+                </li>
+                {% if activities.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ activities.next_page_number }}">下一页</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ activities.paginator.num_pages }}">最后一页 &raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+{% endblock %}

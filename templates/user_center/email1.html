@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}邮箱验证{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg p-4" style="width: 400px;">
+        <div class="card-header bg-dark text-white text-center rounded-top">
+            <h3 class="mb-0">邮箱验证</h3>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="email" class="font-weight-bold">请输入邮箱地址<p></p></label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="example@example.com" required>
+                </div>
+
+                <p></p><button type="submit" class="btn btn-info btn-block">发送验证码</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

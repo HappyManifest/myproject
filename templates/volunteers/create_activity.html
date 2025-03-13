@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}发布志愿者活动{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="display-4 mb-4">发布新的志愿者活动</h1>
+
+
+        <form method="POST" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="title" class="form-label">活动名称:</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+                <div class="invalid-feedback">活动名称是必填项。</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">活动描述:</label>
+                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                <div class="invalid-feedback">活动描述是必填项。</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="start_time" class="form-label">开始时间:</label>
+                <input type="datetime-local" class="form-control" id="start_time" name="start_time" required>
+                <div class="invalid-feedback">开始时间是必填项。</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="end_time" class="form-label">结束时间:</label>
+                <input type="datetime-local" class="form-control" id="end_time" name="end_time" required>
+                <div class="invalid-feedback">结束时间是必填项。</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="location" class="form-label">活动地点:</label>
+                <input type="text" class="form-control" id="location" name="location" required>
+                <div class="invalid-feedback">活动地点是必填项。</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="total_volunteers" class="form-label">需要的志愿者人数:</label>
+                <input type="number" class="form-control" id="total_volunteers" name="total_volunteers" required>
+                <div class="invalid-feedback">请输入志愿者人数。</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg mt-3">
+                <i class="bi bi-check-circle"></i> 发布活动
+            </button>
+        </form>
+
+    </div>
+
+
+    <script>
+
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+{% endblock %}

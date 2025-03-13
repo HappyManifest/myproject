@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+
+        <h1 class="text-center mb-4">{{ post.title }}</h1>
+
+<p class="text-muted text-center">
+    <small>发布时间: {{ post.created_at|date:"Y-m-d H:i" }}</small>
+</p>
+
+
+        <div class="post-author d-flex align-items-center mb-4">
+            <div class="d-flex align-items-center">
+                {% if post.author.Head %}
+                    <img src="{{ post.author.Head.url }}" alt="Post Author" class="rounded-circle" style="width: 50px; height: 50px;">
+                {% else %}
+                    <span class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">{{ post.author.Username|slice:":1" }}</span>
+                {% endif %}
+                <a href="{% url 'user_center:personal_zone2' username=post.author.Username %}"
+   class="ml-4 text-decoration-none text-dark font-weight-bold fs-1">{{ post.author.Username }}</a>
+
+            </div>
+        </div>
+
+
+        <div class="post-content mb-4">
+            <p class="lead">{{ post.content }}</p>
+        </div>
+
+
+        {% if post.image %}
+            <div class="text-center mb-4">
+                <img src="{{ post.image.url }}" alt="Post Image" class="img-fluid rounded shadow-sm" style="max-width: 100%; max-height: 500px; object-fit: contain;">
+            </div>
+        {% endif %}
+
+        <hr class="my-4">
+
+        <h2 class="mb-3 text-center">评论</h2>
+
+
+        <form method="POST" enctype="multipart/form-data" class="mb-4">
+            {% csrf_token %}
+            <div class="form-group">
+                <textarea class="form-control mb-3" name="content" rows="4" placeholder="输入你的评论..." required></textarea>
+
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="comment_image" name="image">
+                    <label class="custom-file-label" for="comment_image">选择图片 (可选)</label>
+                </div>
+            </div><p></p>
+            <button type="submit" class="btn btn-primary btn-lg w-100">提交评论</button>
+        </form>
+
+<div class="comments">
+    {% for comment in comments %}
+        <div class="comment mb-4 p-3 rounded border shadow-sm">
+            <div class="d-flex align-items-center mb-3">
+
+                <div class="d-flex align-items-center">
+                    {% if comment.author.Head %}
+                        <img src="{{ comment.author.Head.url }}" alt="Comment Author" class="rounded-circle" style="width: 40px; height: 40px;">
+                    {% else %}
+                        <span class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">{{ comment.author.Username|slice:":1" }}</span>
+                    {% endif %}
+                    <a href="{% url 'user_center:personal_zone2' username=comment.author.Username %}" class="ml-4 text-decoration-none text-dark font-weight-bold">
+                        {{ comment.author.Username }}
+                    </a>
+                </div>
+            </div>
+
+
+            <p class="text-muted">
+                <small>评论时间: {{ comment.created_at|date:"Y-m-d H:i" }}</small>
+            </p>
+
+
+            <p class="lead">{{ comment.content }}</p>
+
+
+            {% if comment.image %}
+                <div class="text-center mb-3">
+                    <img src="{{ comment.image.url }}" alt="Comment Image" class="img-fluid rounded shadow-sm" style="max-width: 100%; max-height: 300px; object-fit: contain;">
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+
+
+
+{% if posts.has_other_pages %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if posts.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo; 第一页</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ posts.previous_page_number }}">上一页</a>
+            </li>
+        {% endif %}
+
+        <li class="page-item active">
+            <span class="page-link">第 {{ posts.number }} 页 / 共 {{ posts.paginator.num_pages }} 页</span>
+        </li>
+
+        {% if posts.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ posts.next_page_number }}">下一页</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ posts.paginator.num_pages }}">最后一页 &raquo;</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+    </div>
+{% endblock %}
