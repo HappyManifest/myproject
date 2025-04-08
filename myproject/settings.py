@@ -24,7 +24,7 @@ GEOS_LIBRARY_PATH = 'C:\\Users\\HappyManifest\\AppData\\Local\\Programs\\Python\
 SECRET_KEY = 'django-insecure-x183gyzp_vk57y^v9ox3eaf*ch-b3@5^v8kp1brccwo#kcx#0t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
